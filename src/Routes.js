@@ -31,6 +31,8 @@ import AddProduct from './components/auth/Products/AddProduct'
 import AllProducts from './components/auth/Products/AllProducts'
 import ProductDetail from './components/pages/ProductDetail'
 import Deals from './components/pages/Deals'
+import Checkout from './components/pages/Checkout'
+import ConfirmOrder from './components/pages/ConfirmOrder'
 
 const Routes = () => {
     return (
@@ -66,6 +68,8 @@ const Routes = () => {
 
                     {/* user  */}
                     <PrivateRoute exact path="/user/profile" component={UserDashboard} />
+                    <PrivateRoute exact path="/user/checkout" component={Checkout}/>
+                    <PrivateRoute exact path="/user/confirmorder" component={ConfirmOrder}/>
 
 
 

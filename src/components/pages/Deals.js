@@ -13,7 +13,7 @@ const Deals = () => {
     const [categories, setCategories] = useState([])
     const [error, setError] = useState(false)
     const [filteredResult, setFilteredResult] = useState([])
-    const [limit, setLimit] =useState(8)
+    const [limit, setLimit] =useState(4)
     const [skip, setSkip] =useState(0)
     const [size, setSize] = useState(0)
     const [myFilters, setMyFilters] = useState({
@@ -33,10 +33,35 @@ const Deals = () => {
             }
             else {
                 // console.log(data)
-                setFilteredResult(data)
+                setFilteredResult(data.product)
+                setSize(data.size)
+                setSkip(0)
             }
         })
         .catch(error => console.log(error))
+    }
+
+    const loadMore =()=>{
+        let toSkip = skip + limit
+        getFilteredProducts(toSkip, limit, myFilters.filters)
+        .then(data=>{
+            if(data.error){
+                setError(data.error)
+            }
+            else{
+                setFilteredResult([...filteredResult,...data.product])
+                setSize(data.size)
+                setSkip(toSkip)
+            }
+        })
+    }
+
+    const loadMoreButton =()=>{
+        return(
+            <div className='text-center'>
+            {size>=0 && size >= limit && 
+            <button className='btn btn-warning' onClick={loadMore}>Load More</button>}</div>
+        )
     }
 
     const handlePrice = value2 => {
@@ -100,6 +125,7 @@ const Deals = () => {
 
                 </div>
             </div>
+            {loadMoreButton()}
             <Footer />
         </>
     )

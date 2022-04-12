@@ -3,9 +3,9 @@ import Footer from '../layout/Footer'
 import Nav from '../layout/Nav'
 import { Link } from 'react-router-dom'
 import {isAuthenticated, keep_logged, signin} from '../auth'
-import {Redirect} from 'react-router-dom'
+import {Redirect, withRouter} from 'react-router-dom'
 
-const Signin = () => {
+const Signin = ({location, history}) => {
     const [values, setValues] = useState({
         email: "",
         password: "",
@@ -41,16 +41,19 @@ const Signin = () => {
 
     // redirect if successful signin
     const user = isAuthenticated()
+
     const redirect =()=>{
-        if(redirectTo){
+        const user = isAuthenticated()
+        const redirectTo = location.search? location.search.split('=')[1]:'/user/profile'
+        if(user && redirectTo){
             // console.log(user.user.isAdmin)
             if(user && user.user.isAdmin){
-                console.log(user)
+                // console.log(user)
             return <Redirect to='/admin/dashboard'/>
         }
             else {
                 // console.log(user)
-                return <Redirect to='/user/profile'/>
+                return history.push(redirectTo)
             }
         }
     }
@@ -93,4 +96,4 @@ const Signin = () => {
     )
 }
 
-export default Signin
+export default withRouter(Signin)

@@ -3,11 +3,18 @@ import Nav from '../layout/Nav'
 import Footer from '../layout/Footer'
 import { getProductDetails, listRelated } from '../User/userAPI'
 import Product from '../Product'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import { useDispatch } from 'react-redux'
+import { addItemToCart } from '../../actions/cartActions'
 
 const ProductDetail = (props) => {
     const [product, setProduct] = useState({})
     const [error, setError] = useState(false)
     const [relatedProduct, setRelatedProduct] = useState([])
+
+    const dispatch=useDispatch()
+    const [quantity, setQuantity] = useState(1)
 
     useEffect(() => {
         getProductDetails(props.match.params.productId)
@@ -33,9 +40,17 @@ const ProductDetail = (props) => {
             })
     }, [props])
 
+    const addToCart =() =>{
+        dispatch(addItemToCart(props.match.params.productId, quantity))
+        toast.success(`${product.product_name} has been added to cart`)
+    }
+
+
     return (
         <>
             <Nav />
+            <ToastContainer position='top-center' theme='colored'/>
+
             <div className='container w-75 mx-auto my-5'>
             <div className="card mb-3">
                 <div className="row g-0">
@@ -47,7 +62,9 @@ const ProductDetail = (props) => {
                             <h5 className="card-title">{product.product_name}</h5>
                             <h6 className="card-text">Rs.{product.product_price}</h6>
                             <h6>{product.product_description}</h6>
-                            <button className='btn btn-success'>Add to Cart</button>
+                            <button className='btn btn-success'
+                            onClick={addToCart}
+                            >Add to Cart</button>
                         </div>
                     </div>
                 </div>
