@@ -78,7 +78,7 @@ const ConfirmOrder = ({history}) => {
                         )
                     }</p>
                     <button className='btn btn-warning' onClick={() => {
-                        history.push('/signin?redirect=/user/payment')
+                        history.push('/signin?redirect=/payment')
                     }}>To Payment</button>
 
                 </div>

@@ -33,6 +33,8 @@ import ProductDetail from './components/pages/ProductDetail'
 import Deals from './components/pages/Deals'
 import Checkout from './components/pages/Checkout'
 import ConfirmOrder from './components/pages/ConfirmOrder'
+import PaymentElement from './components/pages/PaymentElement'
+import OrderSuccess from './components/pages/OrderSuccess'
 
 const Routes = () => {
     return (
@@ -70,7 +72,8 @@ const Routes = () => {
                     <PrivateRoute exact path="/user/profile" component={UserDashboard} />
                     <PrivateRoute exact path="/user/checkout" component={Checkout}/>
                     <PrivateRoute exact path="/user/confirmorder" component={ConfirmOrder}/>
-
+                    <PrivateRoute exact path="/payment" component={PaymentElement} />
+                     <PrivateRoute exact path="/success" component={OrderSuccess} />
 
 
                     {/* Validation  */}
