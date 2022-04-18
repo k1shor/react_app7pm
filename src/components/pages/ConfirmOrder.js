@@ -11,6 +11,15 @@ const ConfirmOrder = ({history}) => {
     const { cartItems, shipping_info } = useSelector(state => state.cart)
     const { user } = isAuthenticated()
 
+    const totalPrice = cartItems.reduce((ac, item) => (ac + item.quantity * item.price), 0)
+
+    const processToPayment=()=>{
+        const data={
+            totalPrice
+        }
+        sessionStorage.setItem('orderInfo',JSON.stringify(data))
+        history.push('/signin?redirect=/payment')    }
+
     return (
         <>
             <Nav />
@@ -77,9 +86,7 @@ const ConfirmOrder = ({history}) => {
                             (acc + Number(item.price * item.quantity)), 0
                         )
                     }</p>
-                    <button className='btn btn-warning' onClick={() => {
-                        history.push('/signin?redirect=/payment')
-                    }}>To Payment</button>
+                    <button className='btn btn-warning' onClick={() => processToPayment()}>To Payment</button>
 
                 </div>
                 <div className='col-md-1'></div>
