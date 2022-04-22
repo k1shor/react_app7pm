@@ -4,8 +4,10 @@ import { isAuthenticated } from '../auth'
 import './navbar.css'
 import { signout } from '../auth'
 import { withRouter } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 const Nav = ({history}) => {
+    const {cartItems} = useSelector(state=>state.cart)
     const { user } = isAuthenticated()
     return (
         <>
@@ -59,7 +61,11 @@ const Nav = ({history}) => {
                                 </>
                             }
                             <li><Link className="text-decoration-none" to="/cart">
-                                <i className="bi bi-cart text-white fs-3"></i>
+                                <i className="bi bi-cart text-white fs-3 position-relative">
+                                    <span className='position-absolute top-0 start-100 bg-warning badge rounded-pill translate-middle text-dark' style={{fontSize:'10px'}}>
+                                        <span>{cartItems.length}</span>
+                                    </span>
+                                </i>
                             </Link></li>
                         </ul>
                     </div>

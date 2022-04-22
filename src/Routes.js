@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 // import App from './App'
 import Cart from './components/pages/Cart'
@@ -36,13 +36,30 @@ import ConfirmOrder from './components/pages/ConfirmOrder'
 import PaymentElement from './components/pages/PaymentElement'
 import OrderSuccess from './components/pages/OrderSuccess'
 
+import { loadStripe } from '@stripe/stripe-js';
+import { Element, Elements } from '@stripe/react-stripe-js'
+import axios from 'axios'
+import Payment from './components/pages/Payment'
+import OrderDetails from './components/pages/OrderDetails'
+
 const Routes = () => {
+    const [stripeAPIKey, setStripeAPIKey] = useState('')
+
+    const getStripeAPIKey = async () => {
+        const { data } = await axios.get(`http://localhost:5000/stripeapi`)
+        setStripeAPIKey(data.stripeApiKey)
+    }
+
+    useEffect(() => {
+        getStripeAPIKey()
+    })
+
     return (
         <>
             <Router>
                 <Switch>
                     <Route exact path="/" component={Home} />
-                    <Route exact path="/deals" component={Deals}/>
+                    <Route exact path="/deals" component={Deals} />
 
                     <Route exact path="/signup" component={Signup} />
                     <Route exact path="/signin" component={Signin} />
@@ -53,7 +70,7 @@ const Routes = () => {
 
                     <Route exact path="/cart" component={Cart} />
                     <Route exact path="/customerservice" component={CustomerService} />
-                    <Route exact path="/productdetail/:productId" component={ProductDetail}/>
+                    <Route exact path="/productdetail/:productId" component={ProductDetail} />
 
                     {/* admin  */}
                     <AdminRoute exact path="/admin/dashboard" component={AdminDashboard} />
@@ -65,17 +82,20 @@ const Routes = () => {
                     <AdminRoute exact path="/admin/category/update/success" component={CategoryUpdateSuccess} />
 
                     {/* Product */}
-                    <AdminRoute exact path="/admin/product/add" component={AddProduct}/>
-                    <AdminRoute exact path="/admin/products" component = {AllProducts}/>
+                    <AdminRoute exact path="/admin/product/add" component={AddProduct} />
+                    <AdminRoute exact path="/admin/products" component={AllProducts} />
 
                     {/* user  */}
                     <PrivateRoute exact path="/user/profile" component={UserDashboard} />
-                    <PrivateRoute exact path="/user/checkout" component={Checkout}/>
-                    <PrivateRoute exact path="/user/confirmorder" component={ConfirmOrder}/>
-                    <PrivateRoute exact path="/payment" component={PaymentElement} />
-                     <PrivateRoute exact path="/success" component={OrderSuccess} />
-
-
+                    <PrivateRoute exact path="/user/checkout" component={Checkout} />
+                    <PrivateRoute exact path="/user/confirmorder" component={ConfirmOrder} />
+                    {/* <PrivateRoute exact path="/payment" component={PaymentElement} /> */}
+                    <PrivateRoute exact path="/success" component={OrderSuccess} />
+                    {stripeAPIKey && <Elements stripe={loadStripe(stripeAPIKey)}>
+                        <PrivateRoute exact path='/payment' component={Payment} />
+                    </Elements>}
+                    <PrivateRoute exact path='/orderdetails/:id' component={OrderDetails}/>
+                    
                     {/* Validation  */}
                     <Route exact path="/form" component={FormValidation} />
                     <Route exact path="/form2" component={FormV} />

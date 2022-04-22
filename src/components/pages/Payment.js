@@ -9,8 +9,8 @@ import { useStripe,useElements,CardNumberElement,CardExpiryElement,CardCvcElemen
 import { toast,ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { clearErrors, createOrder } from '../../actions/orderActions'
-import { Redirect } from 'react-router-dom'
-
+import Checkout_confirm from './Checkout_confirm'
+import { withRouter } from 'react-router-dom'
 const options={
     style:{
         base:{
@@ -22,7 +22,7 @@ const options={
     }
 }
 
-const Payment = () => {
+const Payment = ({history}) => {
     
      const stripe = useStripe()
      const elements =useElements()
@@ -39,14 +39,14 @@ const Payment = () => {
             toast.error(error)
             dispatch(clearErrors)
         }
-    })
+    },[dispatch,toast,error])
 
     const order= {
         orderItems:cartItems,
         shippingAddress1: shipping_info.shippingAddress1,
         shippingAddress2: shipping_info.shippingAddress2,
         city:shipping_info.city,
-        zip:shipping_info.zip,
+        zipcode:shipping_info.zipcode,
         country:shipping_info.country,
         phone:shipping_info.phone,
         user: user._id
@@ -97,7 +97,7 @@ const Payment = () => {
                      }
                      dispatch(createOrder(order))
                      localStorage.removeItem('cartItems')
-                     return <Redirect to='/success'/>
+                     return history.push('/success')
                  }
                  else{
                      toast.error('There is some error while processing')
@@ -117,6 +117,7 @@ const Payment = () => {
         <Nav/>
         <ToastContainer theme='colored'/>
         <div className='container'>
+            <Checkout_confirm shipping confirmOrder payment/>
             <div className='col-md-5 offset-md-3 p-3 mt-4 shadow-lg'>
                 
                          <form onSubmit={submitHandler}>
@@ -151,4 +152,4 @@ const Payment = () => {
     )
 }
 
-export default Payment
+export default withRouter(Payment)

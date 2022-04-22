@@ -25,7 +25,7 @@ export const cartReducer = (state={cartItems:[], shipping_info:{}}, action) =>{
         case REMOVE_FROM_CART:
             return{
                 ...state, 
-                cartItems: state.cartItems.filter(i=>i.product!==action.payload)
+                cartItems: state.cartItems.filter(i=>i.product!=action.payload)
             }
 
         case SAVE_SHIPPING_INFO:
